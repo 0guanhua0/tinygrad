@@ -15,7 +15,9 @@ logkerns, logkerns_level = open(getenv("LOGKERNS", ""), "a") if getenv("LOGKERNS
 def get_kernel(renderer:Renderer, ast:UOp) -> Kernel:
   if DEBUG >= 5: print(ast)
   k = Kernel(ast, opts=renderer).required_optimizations()
+  # todo(guanhua): fail
   if not NOOPT:
+    # check
     if not k.apply_tensor_cores(getenv("TC", 1)): k.hand_coded_optimizations()
     if BEAM >= 1:
       from tinygrad.engine.search import beam_search, bufs_from_lin
