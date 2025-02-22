@@ -438,6 +438,26 @@ class Kernel:
       if all(x < self.first_upcast for x in unit_stride_axes_mul_4): self.apply_opt(Opt(OptOps.UPCAST, unit_stride_axes_mul_4[0], 4))
     return self
 
+  def hand_coded_optimizations_err(self) -> Kernel:
+    # TODO: doing extra upcasts with images doesn't work for some reason (maybe has to do with to_image_idx)
+    # to trigger the above bug, remove prod(self.full_shape[self.first_upcast:]) from the below
+    # expression and run test/test_ops.py with IMAGE=2
+    # if there are small dims with lots of valid masks, upcast them (they might be from Tensor.stack)
+    # this can be made much smarter
+    to_upcast: list[int] = []
+    # upcast leading axes first (hack-ish for winograd; we actually want to upcast masked axes with low stride first)
+    for axis in range(self.first_reduce):
+      # we might want to be able to split axes that are masked, or refuse to merge them in simplify_merge_adjacent
+      # for now skip upcasting here if there is a symbolic axis
+      if isinstance(self.full_shape[axis], int) and self.full_shape[axis] <= 7 and any(st.axis_is_masked(axis) for st in self.sts) and \
+        prod(self.full_shape[self.first_upcast:]) * prod(self.full_shape[j] for j in to_upcast) * self.full_shape[axis] <= 7 * 7:
+        if DEBUG >= 4: print(f"upcasting masked axis : {axis}")
+        to_upcast.append(axis)
+    for axis in to_upcast[::-1]: self.apply_opt(Opt(OptOps.UPCAST, axis, 0))
+
+    return self
+
+
   def hand_coded_optimizations(self) -> Kernel:
     self.required_optimizations()
 
