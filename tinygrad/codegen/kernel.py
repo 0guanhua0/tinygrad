@@ -401,6 +401,7 @@ class Kernel:
       check(axis < self.first_reduce, "upcast is for non-reduce")
       check(not (self.tensor_core and self.global_dims <= axis < self.global_dims+len(self.tensor_core.get_local_axes())), "can't upcast TC locals")
       check((self.opts is not None and self.opts.device == "DSP") or amt <= 16, "don't upcast more than 16")
+      # check
       self.shift_to(axis, amt, insert_before=None)
       self.upcast()
     elif opt.op is OptOps.NOLOCALS:
@@ -454,6 +455,7 @@ class Kernel:
         if DEBUG >= 4: print(f"upcasting masked axis : {axis}")
         to_upcast.append(axis)
     with open('raw', 'w') as f: f.write(str(self.__dict__))
+    with open('to_upcast', 'w') as f: f.write(str(to_upcast))
     for axis in to_upcast[::-1]: self.apply_opt(Opt(OptOps.UPCAST, axis, 0))
     with open('upcasted', 'w') as f: f.write(str(self.__dict__))
 
