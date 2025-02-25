@@ -2373,15 +2373,43 @@ class TestOps(unittest.TestCase):
         lambda x: torch.nn.functional.avg_pool2d(x, kernel_size=(8,8), stride=5, padding=1, count_include_pad=False),
         lambda x: Tensor.avg_pool2d(x, kernel_size=(8,8), stride=5, padding=1, count_include_pad=False), rtol=1e-5, forward_only=True)
 
-  def test_avg_pool2d_opt(self):
+  def test_avg_pool2d_opt_np(self, k):
     with Context(NOOPT=0):
-      helper_test_op([(1,1,16,16)],
+      helper_test_op([(1,1,k,k)],
+        lambda x: torch.nn.functional.avg_pool2d(x, kernel_size=(8,8), stride=5),
+        lambda x: Tensor.avg_pool2d(x, kernel_size=(8,8), stride=5), rtol=1e-5, forward_only=True)
+
+  def test_avg_pool2d_opt_np_loop(self):
+    for k in range(8, 129):
+      self.test_avg_pool2d_opt_np(k)
+
+  def test_avg_pool2d_opt_loop(self):
+      for k in range(8, 129):
+        self.test_avg_pool2d_opt(k)
+
+  def test_avg_pool2d_opt(self, k):
+    with Context(NOOPT=0):
+      helper_test_op([(1,1,k,k)],
         lambda x: torch.nn.functional.avg_pool2d(x, kernel_size=(8,8), stride=5, padding=1, count_include_pad=False),
         lambda x: Tensor.avg_pool2d(x, kernel_size=(8,8), stride=5, padding=1, count_include_pad=False), rtol=1e-5, forward_only=True)
 
-  def test_avg_pool3d_opt(self):
+  def test_avg_pool3d_opt_np(self, k):
     with Context(NOOPT=0):
-      helper_test_op([(1,1,16,16,16)],
+      helper_test_op([(1,1,k,k,k)],
+        lambda x: torch.nn.functional.avg_pool3d(x, kernel_size=(8,8,8), stride=5),
+        lambda x: Tensor.avg_pool2d(x, kernel_size=(8,8,8), stride=5), rtol=1e-5, forward_only=True)
+
+  def test_avg_pool3d_opt_np_loop(self):
+    for k in range(8, 129):
+      self.test_avg_pool3d_opt_np(k)
+
+  def test_avg_pool3d_opt_loop(self):
+    for k in range(8, 129):
+      self.test_avg_pool3d_opt(k)
+
+  def test_avg_pool3d_opt(self, k):
+    with Context(NOOPT=0):
+      helper_test_op([(1,1,k,k,k)],
         lambda x: torch.nn.functional.avg_pool3d(x, kernel_size=(8,8,8), stride=5, padding=1, count_include_pad=False),
         lambda x: Tensor.avg_pool2d(x, kernel_size=(8,8,8), stride=5, padding=1, count_include_pad=False), rtol=1e-5, forward_only=True)
 
