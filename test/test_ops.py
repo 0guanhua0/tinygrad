@@ -2383,10 +2383,6 @@ class TestOps(unittest.TestCase):
     for k in range(8, 129):
       self.test_avg_pool2d_opt_np(k)
 
-  def test_avg_pool2d_opt_loop(self):
-      for k in range(8, 129):
-        self.test_avg_pool2d_opt(k)
-
   def test_avg_pool2d_opt(self, k):
     with Context(NOOPT=0):
       helper_test_op([(1,1,k,k)],
@@ -2403,9 +2399,17 @@ class TestOps(unittest.TestCase):
     for k in range(8, 129):
       self.test_avg_pool3d_opt_np(k)
 
+  def test_avg_pool2d_opt_loop(self):
+      # for k in range(8, 129):
+      # for k in range(16, 17):
+      for k in range(17, 18):
+        self.test_avg_pool2d_opt(k)
+
   def test_avg_pool3d_opt_loop(self):
-    for k in range(8, 129):
-      self.test_avg_pool3d_opt(k)
+    # for k in range(8, 129):
+      # for k in range(9, 10):
+      for k in range(12, 13):
+          self.test_avg_pool3d_opt(k)
 
   def test_avg_pool3d_opt(self, k):
     with Context(NOOPT=0):

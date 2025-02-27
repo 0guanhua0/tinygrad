@@ -429,9 +429,9 @@ class Kernel:
           padded = True
       check(padded, "nothing was padded")
 
-    if append_opt: self.applied_opts.append(opt)
-    if self.simplify_ones() and self.tensor_core_opts:
-      self.tensor_core_opts.fix_axes(axis) # fix up axes in TC opts if required after simplify_ones()
+    # if append_opt: self.applied_opts.append(opt)
+    # if self.simplify_ones() and self.tensor_core_opts:
+    #   self.tensor_core_opts.fix_axes(axis) # fix up axes in TC opts if required after simplify_ones()
 
   def required_optimizations(self) -> Kernel:
     if isinstance(self.membufs[0].dtype, ImageDType):
