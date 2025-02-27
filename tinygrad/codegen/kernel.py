@@ -456,15 +456,14 @@ class Kernel:
         if DEBUG >= 4: print(f"upcasting masked axis : {axis}")
         to_upcast.append(axis)
     with open('raw', 'w') as f: f.write(str(self.__dict__))
-    with open('to_upcast', 'w') as f: f.write(str(to_upcast))
     for axis in to_upcast[::-1]: self.apply_opt(Opt(OptOps.UPCAST, axis, 0))
     with open('upcasted', 'w') as f: f.write(str(self.__dict__))
 
-    # if last dim is small(ish) and it's a reduce dim, upcast the reduce (loop unrolling). no simplify needed since it's just an upcast.
-    if self.first_reduce < self.first_upcast and (prod(self.full_shape[self.first_upcast:]) <= 4 or not any(r for _,_,r in self.upcasted_axis(self.full_buf_index))) and (self.upcasted == 0 or prod(self.full_shape[-self.upcasted:]) < 64):  # noqa: E501
-      if isinstance(s:=self.full_unupcasted_shape[-1], int) and s <= 32:  # NOTE: cannot loop unroll symbolic axis
-        # self.apply_opt(Opt(OptOps.UNROLL, len(self.full_unupcasted_shape)-1-self.first_reduce, 0))
-        with open('unrolled', 'w') as f: f.write(str(self.__dict__))
+#     # if last dim is small(ish) and it's a reduce dim, upcast the reduce (loop unrolling). no simplify needed since it's just an upcast.
+#     if self.first_reduce < self.first_upcast and (prod(self.full_shape[self.first_upcast:]) <= 4 or not any(r for _,_,r in self.upcasted_axis(self.full_buf_index))) and (self.upcasted == 0 or prod(self.full_shape[-self.upcasted:]) < 64):  # noqa: E501
+#       if isinstance(s:=self.full_unupcasted_shape[-1], int) and s <= 32:  # NOTE: cannot loop unroll symbolic axis
+#         # self.apply_opt(Opt(OptOps.UNROLL, len(self.full_unupcasted_shape)-1-self.first_reduce, 0))
+#         with open('unrolled', 'w') as f: f.write(str(self.__dict__))
 
     return self
 
