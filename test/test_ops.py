@@ -2401,11 +2401,11 @@ class TestOps(unittest.TestCase):
 
   def test_avg_pool2d_opt_loop(self):
       # for k in range(8, 129):
-      # for k in range(16, 17):
+      for k in range(16, 17):
       # for k in range(17, 18):
       # for k in range(32, 33):
       # for k in range(33, 34):
-      for k in range(34, 35):
+      # for k in range(34, 35):
         self.test_avg_pool2d_opt(k)
 
   def test_avg_pool3d_opt_loop(self):

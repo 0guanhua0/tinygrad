@@ -455,8 +455,10 @@ class Kernel:
         prod(self.full_shape[self.first_upcast:]) * prod(self.full_shape[j] for j in to_upcast) * self.full_shape[axis] <= 7 * 7:
         if DEBUG >= 4: print(f"upcasting masked axis : {axis}")
         to_upcast.append(axis)
+    graph_rewrite(self.ast, PatternMatcher([]), name="raw")
     with open('raw', 'w') as f: f.write(str(self.__dict__))
     for axis in to_upcast[::-1]: self.apply_opt(Opt(OptOps.UPCAST, axis, 0))
+    graph_rewrite(self.ast, PatternMatcher([]), name="upcasted")
     with open('upcasted', 'w') as f: f.write(str(self.__dict__))
 
 #     # if last dim is small(ish) and it's a reduce dim, upcast the reduce (loop unrolling). no simplify needed since it's just an upcast.

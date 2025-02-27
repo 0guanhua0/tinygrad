@@ -122,7 +122,7 @@ def block_finalize(block:UOp):
   assert all(len(x.src) == 0 and x.op not in {Ops.BLOCK, Ops.BLOCKSTART, Ops.BLOCKEND, Ops.BLOCKFORK} for x in _uops)
   _uops += block.arg.lst
   # strip the SINK
-  assert _uops[-1].op is Ops.SINK, "doesn't end with SINK"
+  assert _uops[-1].op is Ops.SINK, "doesn't end with SINK, it's "+str(_uops[-1].op) + "\nfull block: "+str(block) + "\nuops: "+str(_uops)
   return UOp(Ops.BLOCK, arg=BasicBlock((), tuple(_uops[:-1])))
 
 pm_block_finalize = PatternMatcher([(UPat(Ops.BLOCK, name="block"), block_finalize)])
