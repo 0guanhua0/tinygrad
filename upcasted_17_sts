@@ -1,0 +1,5 @@
+View(shape=(1, 1, 1, 1, 3, 3), strides=(0, 0, 0, 0, 1, 3), offset=0, mask=None, contiguous=False)
+View(shape=(1, 1, 1, 1, 3, 3), strides=(0, 0, 0, 0, 1, 3), offset=0, mask=None, contiguous=False)
+View(shape=(1, 1, 1, 1, 17, 19, 17, 19), strides=(0, 0, 0, 0, 0, 17, 0, 1), offset=-18, mask=((0, 1), (0, 1), (0, 1), (0, 1), (0, 17), (1, 18), (0, 17), (1, 18)), contiguous=False), View(shape=(1, 1, 8, 8, 3, 3), strides=(0, 0, 12597, 39, 5, 1615), offset=0, mask=None, contiguous=False)
+View(shape=(1, 1, 1, 1, 3, 3), strides=(0, 0, 0, 0, 1, 3), offset=0, mask=None, contiguous=False)
+View(shape=(1, 1, 1, 1, 17, 19, 17, 19), strides=(0, 0, 0, 0, 0, 17, 0, 1), offset=-18, mask=((0, 1), (0, 1), (0, 1), (0, 1), (0, 17), (1, 18), (0, 17), (1, 18)), contiguous=False), View(shape=(1, 1, 8, 8, 3, 3), strides=(0, 0, 12597, 39, 5, 1615), offset=0, mask=None, contiguous=False)
