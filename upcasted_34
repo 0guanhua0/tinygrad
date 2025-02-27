@@ -1,0 +1,31 @@
+{'ast': UOp(Ops.SINK, dtypes.void, arg=None, src=(
+  UOp(Ops.STORE, dtypes.void, arg=None, src=(
+    UOp(Ops.DEFINE_GLOBAL, dtypes.float.ptr(36), arg=0, src=()),
+    x2:=UOp(Ops.VIEW, dtypes.void, arg=ShapeTracker(views=(View(shape=(1, 1, 6, 6, 1, 1), strides=(0, 0, 6, 1, 0, 0), offset=0, mask=None, contiguous=True),)), src=()),
+    UOp(Ops.MUL, dtypes.float, arg=None, src=(
+      UOp(Ops.REDUCE_AXIS, dtypes.float, arg=(Ops.ADD, (4, 5)), src=(
+        UOp(Ops.LOAD, dtypes.float, arg=None, src=(
+          UOp(Ops.DEFINE_GLOBAL, dtypes.float.ptr(1156), arg=1, src=()),
+          UOp(Ops.VIEW, dtypes.void, arg=ShapeTracker(views=(View(shape=(1, 1, 1, 1, 17, 36, 17, 36), strides=(0, 0, 0, 0, 0, 34, 0, 1), offset=-35, mask=((0, 1), (0, 1), (0, 1), (0, 1), (0, 17), (1, 35), (0, 17), (1, 35)), contiguous=False), View(shape=(1, 1, 6, 6, 8, 8), strides=(0, 0, 3060, 5, 44676, 73), offset=0, mask=None, contiguous=False))), src=()),)),)),
+      UOp(Ops.RECIP, dtypes.float, arg=None, src=(
+        UOp(Ops.LOAD, dtypes.float, arg=None, src=(
+          UOp(Ops.DEFINE_GLOBAL, dtypes.float.ptr(36), arg=2, src=()),
+           x2,)),)),)),)),)), 'opts': <tinygrad.renderer.cstyle.NVRenderer object at 0x7afe909084f0>, 'reduceops': [UOp(Ops.REDUCE_AXIS, dtypes.float, arg=(Ops.ADD, (4, 5)), src=(
+  UOp(Ops.LOAD, dtypes.float, arg=None, src=(
+    UOp(Ops.DEFINE_GLOBAL, dtypes.float.ptr(1156), arg=1, src=()),
+    UOp(Ops.VIEW, dtypes.void, arg=ShapeTracker(views=(View(shape=(1, 1, 1, 1, 17, 36, 17, 36), strides=(0, 0, 0, 0, 0, 34, 0, 1), offset=-35, mask=((0, 1), (0, 1), (0, 1), (0, 1), (0, 17), (1, 35), (0, 17), (1, 35)), contiguous=False), View(shape=(1, 1, 6, 6, 8, 8), strides=(0, 0, 3060, 5, 44676, 73), offset=0, mask=None, contiguous=False))), src=()),)),))], 'vars': [], 'bufs': [UOp(Ops.STORE, dtypes.void, arg=None, src=(
+  UOp(Ops.DEFINE_GLOBAL, dtypes.float.ptr(36), arg=0, src=()),
+  x1:=UOp(Ops.VIEW, dtypes.void, arg=ShapeTracker(views=(View(shape=(1, 1, 6, 6, 1, 1), strides=(0, 0, 6, 1, 0, 0), offset=0, mask=None, contiguous=True),)), src=()),
+  UOp(Ops.MUL, dtypes.float, arg=None, src=(
+    UOp(Ops.REDUCE_AXIS, dtypes.float, arg=(Ops.ADD, (4, 5)), src=(
+      UOp(Ops.LOAD, dtypes.float, arg=None, src=(
+        UOp(Ops.DEFINE_GLOBAL, dtypes.float.ptr(1156), arg=1, src=()),
+        UOp(Ops.VIEW, dtypes.void, arg=ShapeTracker(views=(View(shape=(1, 1, 1, 1, 17, 36, 17, 36), strides=(0, 0, 0, 0, 0, 34, 0, 1), offset=-35, mask=((0, 1), (0, 1), (0, 1), (0, 1), (0, 17), (1, 35), (0, 17), (1, 35)), contiguous=False), View(shape=(1, 1, 6, 6, 8, 8), strides=(0, 0, 3060, 5, 44676, 73), offset=0, mask=None, contiguous=False))), src=()),)),)),
+    UOp(Ops.RECIP, dtypes.float, arg=None, src=(
+      UOp(Ops.LOAD, dtypes.float, arg=None, src=(
+        UOp(Ops.DEFINE_GLOBAL, dtypes.float.ptr(36), arg=2, src=()),
+         x1,)),)),)),)), UOp(Ops.LOAD, dtypes.float, arg=None, src=(
+  UOp(Ops.DEFINE_GLOBAL, dtypes.float.ptr(36), arg=2, src=()),
+  UOp(Ops.VIEW, dtypes.void, arg=ShapeTracker(views=(View(shape=(1, 1, 6, 6, 1, 1), strides=(0, 0, 6, 1, 0, 0), offset=0, mask=None, contiguous=True),)), src=()),)), UOp(Ops.LOAD, dtypes.float, arg=None, src=(
+  UOp(Ops.DEFINE_GLOBAL, dtypes.float.ptr(1156), arg=1, src=()),
+  UOp(Ops.VIEW, dtypes.void, arg=ShapeTracker(views=(View(shape=(1, 1, 1, 1, 17, 36, 17, 36), strides=(0, 0, 0, 0, 0, 34, 0, 1), offset=-35, mask=((0, 1), (0, 1), (0, 1), (0, 1), (0, 17), (1, 35), (0, 17), (1, 35)), contiguous=False), View(shape=(1, 1, 6, 6, 8, 8), strides=(0, 0, 3060, 5, 44676, 73), offset=0, mask=None, contiguous=False))), src=()),))], 'full_buf_index': 2, 'sts': [ShapeTracker(views=(View(shape=(1, 1, 1, 1, 6, 6), strides=(0, 0, 0, 0, 1, 6), offset=0, mask=None, contiguous=False),)), ShapeTracker(views=(View(shape=(1, 1, 1, 1, 6, 6), strides=(0, 0, 0, 0, 1, 6), offset=0, mask=None, contiguous=False),)), ShapeTracker(views=(View(shape=(1, 1, 1, 1, 17, 36, 17, 36), strides=(0, 0, 0, 0, 0, 34, 0, 1), offset=-35, mask=((0, 1), (0, 1), (0, 1), (0, 1), (0, 17), (1, 35), (0, 17), (1, 35)), contiguous=False), View(shape=(1, 1, 8, 8, 6, 6), strides=(0, 0, 44676, 73, 5, 3060), offset=0, mask=None, contiguous=False))), ShapeTracker(views=(View(shape=(1, 1, 1, 1, 6, 6), strides=(0, 0, 0, 0, 1, 6), offset=0, mask=None, contiguous=False),)), ShapeTracker(views=(View(shape=(1, 1, 1, 1, 17, 36, 17, 36), strides=(0, 0, 0, 0, 0, 34, 0, 1), offset=-35, mask=((0, 1), (0, 1), (0, 1), (0, 1), (0, 17), (1, 35), (0, 17), (1, 35)), contiguous=False), View(shape=(1, 1, 8, 8, 6, 6), strides=(0, 0, 44676, 73, 5, 3060), offset=0, mask=None, contiguous=False)))], 'applied_opts': [], 'group_for_reduces': 0, 'upcasted': 2, 'local_dims': 0, 'tensor_core': None, 'tensor_core_opts': None, 'use_tensor_cores': 0, 'dont_use_locals': False}

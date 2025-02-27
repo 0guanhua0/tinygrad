@@ -1,0 +1,14 @@
+{'ast': UOp(Ops.SINK, dtypes.void, arg=None, src=(
+  UOp(Ops.STORE, dtypes.void, arg=None, src=(
+    UOp(Ops.DEFINE_GLOBAL, dtypes.uchar.ptr(10), arg=0, src=()),
+    UOp(Ops.VIEW, dtypes.void, arg=ShapeTracker(views=(View(shape=(10,), strides=(1,), offset=0, mask=None, contiguous=True),)), src=()),
+    UOp(Ops.LOAD, dtypes.uchar, arg=None, src=(
+      UOp(Ops.DEFINE_GLOBAL, dtypes.uchar.ptr(12), arg=1, src=()),
+      UOp(Ops.VIEW, dtypes.void, arg=ShapeTracker(views=(View(shape=(10,), strides=(1,), offset=2, mask=None, contiguous=False),)), src=()),)),)),)), 'opts': <tinygrad.renderer.cstyle.NVRenderer object at 0x77896db64f40>, 'reduceops': [], 'vars': [], 'bufs': [UOp(Ops.STORE, dtypes.void, arg=None, src=(
+  UOp(Ops.DEFINE_GLOBAL, dtypes.uchar.ptr(10), arg=0, src=()),
+  UOp(Ops.VIEW, dtypes.void, arg=ShapeTracker(views=(View(shape=(10,), strides=(1,), offset=0, mask=None, contiguous=True),)), src=()),
+  UOp(Ops.LOAD, dtypes.uchar, arg=None, src=(
+    UOp(Ops.DEFINE_GLOBAL, dtypes.uchar.ptr(12), arg=1, src=()),
+    UOp(Ops.VIEW, dtypes.void, arg=ShapeTracker(views=(View(shape=(10,), strides=(1,), offset=2, mask=None, contiguous=False),)), src=()),)),)), UOp(Ops.LOAD, dtypes.uchar, arg=None, src=(
+  UOp(Ops.DEFINE_GLOBAL, dtypes.uchar.ptr(12), arg=1, src=()),
+  UOp(Ops.VIEW, dtypes.void, arg=ShapeTracker(views=(View(shape=(10,), strides=(1,), offset=2, mask=None, contiguous=False),)), src=()),))], 'full_buf_index': 0, 'sts': [ShapeTracker(views=(View(shape=(10,), strides=(1,), offset=0, mask=None, contiguous=True),)), ShapeTracker(views=(View(shape=(10,), strides=(1,), offset=2, mask=None, contiguous=False),))], 'applied_opts': [], 'group_for_reduces': 0, 'upcasted': 0, 'local_dims': 0, 'tensor_core': None, 'tensor_core_opts': None, 'use_tensor_cores': 0, 'dont_use_locals': False}

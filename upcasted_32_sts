@@ -1,0 +1,2 @@
+View(shape=(10,), strides=(1,), offset=0, mask=None, contiguous=True)
+View(shape=(10,), strides=(1,), offset=2, mask=None, contiguous=False)
