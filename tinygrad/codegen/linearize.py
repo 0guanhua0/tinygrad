@@ -167,6 +167,7 @@ def block_reorder(in_block:UOp):
 
 def linearize_uop(sink:UOp, skip_check:bool=not __debug__) -> list[UOp]:
   assert sink.op is Ops.SINK, f"sink isn't sink, it's {sink.op}"
+  print('in linearize_uop')
 
   # get children and all block contexts
   temp_block_ctxs: dict[UOp, list[UOp]] = {}
@@ -225,11 +226,82 @@ def linearize_uop(sink:UOp, skip_check:bool=not __debug__) -> list[UOp]:
   sink = sink.substitute(new_forks)
 
   # reorder ops in block for speed
-  sink = sink.substitute({u:newu for u in sink.toposort if u.op is Ops.BLOCK and (newu:=block_reorder(u)) is not u})
+  # sink = sink.substitute({u:newu for u in sink.toposort if u.op is Ops.BLOCK and (newu:=block_reorder(u)) is not u})
 
   # final rewrite to merge all blocks into one
-  sink = graph_rewrite(sink, pm_block_merge, ctx=children)
+  # sink = graph_rewrite(sink, pm_block_merge, ctx=children)
 
+  # there should just be one block left, with a few parents with 0 srcs (now done in a rewriter)
+  sink = graph_rewrite(sink, pm_block_finalize)
+
+  # sanity checks (NOTE: these can cause things to be skipped in BEAM)
+  if not skip_check: type_verify(sink.arg.lst)
+
+  # return the list. TODO: refactor to return the UOp
+  return list(sink.arg.lst)
+
+def linearize_uop_err(sink:UOp, skip_check:bool=not __debug__) -> list[UOp]:
+  assert sink.op is Ops.SINK, f"sink isn't sink, it's {sink.op}"
+  print('in linearize_uop')
+
+  # get children and all block contexts
+  temp_block_ctxs: dict[UOp, list[UOp]] = {}
+  children: dict[UOp, list[UOp]] = {}
+  for u in sink.toposort:
+    this_block_ctx: list[UOp] = []
+    for s in u.src:
+      # save children
+      children.setdefault(s, []).append(u)
+      # compute block ctx
+      if s.op in {Ops.RANGE, Ops.IF}: this_block_ctx.append(s)
+      # don't flow (fully) through assign and store
+      elif s.op is Ops.STORE:
+        # ugh, deal with non-reduce locals. probably wrong
+        if isinstance(s.src[0].dtype, PtrDType) and s.src[0].dtype.local:
+          idx_context, store_context = temp_block_ctxs[s.src[0]], temp_block_ctxs[s]
+          this_block_ctx += [x for x in store_context if x not in idx_context and x.op is Ops.RANGE]
+      elif s.op is Ops.ASSIGN:
+        # flow though assign, but remove the ranges used in the assign
+        assert s.src[0].op is Ops.DEFINE_ACC
+        this_block_ctx += [x for x in temp_block_ctxs[s.src[1]] if x not in s.src[0].src[1:]]
+      else:
+        # flow though everything else
+        this_block_ctx += temp_block_ctxs[s]
+    temp_block_ctxs[u] = sorted(dedup(this_block_ctx), key=lambda x: x.tuplize)
+
+  # make final block_ctxs, add BLOCKSTART to block_ctxs for IF and RANGE
+  block_ctxs: dict[UOp, tuple[UOp, ...]] = {}
+  for u in sink.toposort:
+    block_ctxs[u] = ((UOp(Ops.BLOCKSTART, src=(u,)),) + tuple(temp_block_ctxs[u])) if u.op in {Ops.IF, Ops.RANGE} else tuple(temp_block_ctxs[u])
+
+  # TODO: there's probably a clever way to remove this while loop
+  while 1:
+    sink = graph_rewrite(sink, make_basic_blocks, ctx=(block_ctxs, children))
+
+    # add BLOCKFORK (slow!)
+    block_parent_count = collections.Counter(flatten([x.src for x in sink.toposort if x.op is Ops.BLOCK]))
+    non_block_parents = set(flatten([x.src for x in sink.toposort if x.op is not Ops.BLOCK]))
+    forks = {u:UOp(Ops.BLOCKFORK, src=(UOp(Ops.BLOCK, src=u.src, arg=BasicBlock(block_ctxs[u], (u,))),), arg=child_count)
+      for u,child_count in block_parent_count.items() if u.op not in DONT_PLACE_IN_BLOCK and child_count > 1 and u not in non_block_parents}
+
+    if not len(forks): break
+    sink = sink.substitute(forks)
+
+  # combine matching BLOCKENDS
+  blockends_to_arg: dict[UOp, list[UOp]] = {}
+  for be in sink.toposort:
+    if be.op is Ops.BLOCKEND: blockends_to_arg.setdefault(be.arg.end, []).append(be)
+  new_forks = {}
+  for k,v in blockends_to_arg.items():
+    # NOTE: if any BLOCKEND is the parent of any other with the same arg, this algo fails
+    if len(v) > 1:
+      out = UOp(Ops.BLOCKFORK, src=(UOp(Ops.BLOCKEND, src=tuple(flatten(x.src for x in v)),
+                                        arg=BasicBlock(tuple(dedup(flatten([y.arg.ctx for y in v]))), v[0].arg.lst, k)),), arg=len(v))
+      for u in v: new_forks[u] = out
+  sink = sink.substitute(new_forks)
+
+
+  assert sink.op is Ops.BLOCK, f"final sink isn't block, it's {sink.op}"
   # there should just be one block left, with a few parents with 0 srcs (now done in a rewriter)
   sink = graph_rewrite(sink, pm_block_finalize)
 

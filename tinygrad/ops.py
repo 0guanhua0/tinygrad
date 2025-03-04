@@ -813,7 +813,14 @@ class PatternMatcher:
     for p,fxn,early_reject,has_ctx in self.pdict.get(uop.op, []):
       if not early_reject.issubset(ler): continue
       for match in p.match(uop, {}):
-        if (ret:=(fxn(ctx=ctx, **match) if has_ctx else fxn(**match))) is not None: return ret
+        # print('match; ', match)
+        print('fxn; ', fxn)
+        # if fxn.__name__ == "block_merge":  # modify the function name as needed
+        #     import pdb; pdb.set_trace()  # This will launch the debugger when the condition is met
+        # if (ret:=(fxn(ctx=ctx, **match) if has_ctx else fxn(**match))) is not None: return ret
+        if (ret:=(fxn(ctx=ctx, **match) if has_ctx else fxn(**match))) is not None: 
+          # import pdb; pdb.set_trace()
+          return ret
     return None
 
 # *** tracking pattern matcher ***
