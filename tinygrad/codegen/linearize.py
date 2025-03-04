@@ -228,6 +228,8 @@ def linearize_uop(sink:UOp, skip_check:bool=not __debug__) -> list[UOp]:
   sink = sink.substitute({u:newu for u in sink.toposort if u.op is Ops.BLOCK and (newu:=block_reorder(u)) is not u})
 
   # final rewrite to merge all blocks into one
+  # todo(guanhua)bug
+  # import pdb; pdb.set_trace()
   sink = graph_rewrite(sink, pm_block_merge, ctx=children)
 
   # there should just be one block left, with a few parents with 0 srcs (now done in a rewriter)
