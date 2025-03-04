@@ -123,7 +123,7 @@ def block_finalize(block:UOp):
   assert all(len(x.src) == 0 and x.op not in {Ops.BLOCK, Ops.BLOCKSTART, Ops.BLOCKEND, Ops.BLOCKFORK} for x in _uops)
   _uops += block.arg.lst
   # strip the SINK
-  assert _uops[-1].op is Ops.SINK, "doesn't end with SINK, it's "+str(_uops[-1].op) + "\nfull block: "+str(block) + "\nuops: "+str(_uops)
+  assert _uops[-1].op is Ops.SINK, "doesn't end with SINK, it's "+str(_uops[-1].op) + "\nfull block: "+str(block) + "\nuops: "+str(_uops) + "\nblock.src: "+str(block.src) + "\nblock.arg.lst: "+str(block.arg.lst) + "\nblock.arg "+str(block.arg)
   return UOp(Ops.BLOCK, arg=BasicBlock((), tuple(_uops[:-1])))
 
 pm_block_finalize = PatternMatcher([(UPat(Ops.BLOCK, name="block"), block_finalize)])
@@ -231,7 +231,9 @@ def linearize_uop(sink:UOp, skip_check:bool=not __debug__) -> list[UOp]:
   # final rewrite to merge all blocks into one
   # todo(guanhua)bug
   # import pdb; pdb.set_trace()
-  sink = graph_rewrite(sink, pm_block_merge, ctx=children)
+  graph_rewrite(sink, PatternMatcher([]), name='before block merge')
+  # sink = graph_rewrite(sink, pm_block_merge, ctx=children)
+  graph_rewrite(sink, PatternMatcher([]), name='after block merge')
 
   # there should just be one block left, with a few parents with 0 srcs (now done in a rewriter)
   sink = graph_rewrite(sink, pm_block_finalize)

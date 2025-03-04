@@ -458,6 +458,7 @@ class Kernel:
     graph_rewrite(self.ast, PatternMatcher([]), name="raw")
     with open('raw', 'w') as f: f.write(str(self.__dict__))
     for axis in to_upcast[::-1]: self.apply_opt(Opt(OptOps.UPCAST, axis, 0))
+    self.upcasted += 1
     graph_rewrite(self.ast, PatternMatcher([]), name="upcasted")
     with open('upcasted', 'w') as f: f.write(str(self.__dict__))
 
