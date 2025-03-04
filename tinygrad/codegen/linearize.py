@@ -77,6 +77,7 @@ make_basic_blocks = PatternMatcher([
 
 def block_merge(ctx, x:UOp):
   # ctx is children here
+  print('x.op', x.op)
   if x.op is Ops.BLOCKEND:
     # if it's a BLOCKEND, see if we are done with placement. if all the children of the range are in here
     in_this_block = set(x.arg.lst)
