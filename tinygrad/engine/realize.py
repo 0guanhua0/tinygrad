@@ -156,7 +156,6 @@ def lower_schedule_item(si:ScheduleItem) -> ExecItem: return ExecItem(*cast(tupl
 def lower_schedule(schedule:list[ScheduleItem]) -> Generator[ExecItem, None, None]:
   while len(schedule):
     si = schedule.pop(0)
-    print('si ', si)
     try: yield lower_schedule_item(si)
     except Exception as e:
       if DEBUG >= 2:
