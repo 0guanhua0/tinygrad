@@ -77,8 +77,10 @@ make_basic_blocks = PatternMatcher([
 
 def block_merge(ctx, x:UOp):
   # ctx is children here
+  # import pdb; pdb.set_trace()
   print('x.op', x.op)
   if x.op is Ops.BLOCKEND:
+    import pdb; pdb.set_trace()
     # if it's a BLOCKEND, see if we are done with placement. if all the children of the range are in here
     in_this_block = set(x.arg.lst)
     if len([y for y in ctx[x.arg.end] if y not in in_this_block]) == 0:
@@ -101,11 +103,13 @@ def block_merge(ctx, x:UOp):
   placed = set()
   for u in x.src:
     if u.op is Ops.BLOCK and (tuple(u.arg.ctx) == tuple(x.arg.ctx) or (x.arg.end is not None and x.arg.end in u.arg.ctx)):
+      import pdb; pdb.set_trace()
       # NOTE: this can't appear in srcs twice or it would be a BLOCKFORK
       new_ctx += tuple(y for y in u.arg.ctx if y not in x.arg.ctx)
       new_srcs.extend(u.src)
       to_append.extend(u.arg.lst)
     elif u.op is Ops.BLOCKFORK and x.src.count(u) == u.arg: # block fork appears # of times in srcs
+      import pdb; pdb.set_trace()
       if u not in placed:
         new_srcs.extend(u.src)
         placed.add(u)
@@ -232,7 +236,7 @@ def linearize_uop(sink:UOp, skip_check:bool=not __debug__) -> list[UOp]:
   # todo(guanhua)bug
   # import pdb; pdb.set_trace()
   graph_rewrite(sink, PatternMatcher([]), name='before block merge')
-  # sink = graph_rewrite(sink, pm_block_merge, ctx=children)
+  sink = graph_rewrite(sink, pm_block_merge, ctx=children)
   graph_rewrite(sink, PatternMatcher([]), name='after block merge')
 
   # there should just be one block left, with a few parents with 0 srcs (now done in a rewriter)
