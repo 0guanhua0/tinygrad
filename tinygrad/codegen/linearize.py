@@ -78,9 +78,11 @@ make_basic_blocks = PatternMatcher([
 def block_merge(ctx, x:UOp):
   # ctx is children here
   # import pdb; pdb.set_trace()
-  print('x.op', x.op)
+  print('x.op\n', x.op.__repr__())
   if x.op is Ops.BLOCKEND:
-    import pdb; pdb.set_trace()
+    print('[y for y in ctx[x.arg.end]]\n', [y for y in ctx[x.arg.end]])
+    print('set(x.arg.lst)\n', set(x.arg.lst))
+    # import pdb; pdb.set_trace()
     # if it's a BLOCKEND, see if we are done with placement. if all the children of the range are in here
     in_this_block = set(x.arg.lst)
     if len([y for y in ctx[x.arg.end] if y not in in_this_block]) == 0:
@@ -103,13 +105,17 @@ def block_merge(ctx, x:UOp):
   placed = set()
   for u in x.src:
     if u.op is Ops.BLOCK and (tuple(u.arg.ctx) == tuple(x.arg.ctx) or (x.arg.end is not None and x.arg.end in u.arg.ctx)):
-      import pdb; pdb.set_trace()
+      print('tuple(u.arg.ctx)\n', tuple(u.arg.ctx))
+      print('tuple(x.arg.ctx)\n', tuple(x.arg.ctx))
+      print('x.arg.end\n', x.arg.end)
+      print('u.arg.ctx\n', u.arg.ctx)
+      # import pdb; pdb.set_trace()
       # NOTE: this can't appear in srcs twice or it would be a BLOCKFORK
       new_ctx += tuple(y for y in u.arg.ctx if y not in x.arg.ctx)
       new_srcs.extend(u.src)
       to_append.extend(u.arg.lst)
     elif u.op is Ops.BLOCKFORK and x.src.count(u) == u.arg: # block fork appears # of times in srcs
-      import pdb; pdb.set_trace()
+      # import pdb; pdb.set_trace()
       if u not in placed:
         new_srcs.extend(u.src)
         placed.add(u)
